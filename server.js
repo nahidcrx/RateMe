@@ -43,7 +43,7 @@ app.use(passport.session());
 
 //route
 require('./routes/user')(app, passport);
-
+require('./routes/company')(app, passport);
 
 //port
 app.listen(3000, function(){
