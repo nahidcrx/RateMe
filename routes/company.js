@@ -1,7 +1,6 @@
 var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
-var fileUpload = require('express-fileupload');
 
 var Company = require('../models/company');
 
@@ -12,6 +11,16 @@ module.exports = (app) => {
     });
     
 app.post('/company/create', (req, res) => {
+    
+    if(req.files){
+            
+            var file = req.files.company_pic;
+            
+            file.mv('./public/companies/' + file.name);
+
+            //console.log(req.files.company_pic.name);
+            //console.log("Success");
+        }
         
         var newCompany = new Company();
         newCompany.name = req.body.name;
@@ -20,8 +29,8 @@ app.post('/company/create', (req, res) => {
         newCompany.country = req.body.country;
         newCompany.sector = req.body.sector;
         newCompany.website = req.body.website;
-        newCompany.image = req.body.upload;
-        
+        //newCompany.image = req.body.upload;
+        newCompany.image = req.files.company_pic.name;
         newCompany.save((err) => {
             if(err){
                 console.log(err);
@@ -38,7 +47,7 @@ app.post('/company/create', (req, res) => {
         var form = new formidable.IncomingForm();
         form.encoding = 'utf-8';
         
-        form.uploadDir = path.join(__dirname, '../public/uploads');
+        form.uploadDir = path.join(__dirname, '../public/companies');
         
         form.on('file', (field, file) => {
            fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {

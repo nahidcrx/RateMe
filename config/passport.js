@@ -33,10 +33,23 @@ passport.use('local.signup', new LocalStrategy({
             return done(null, false, req.flash('error','Email Already Exist'));
         }
         
+//        if(req.files){
+//            
+//            var file = req.files.pro_pic;
+//            
+//            file.mv('./public/users/' + file.name);
+//
+//            //console.log(req.files.pro_pic.name);
+//            console.log("Success");
+//        }
+        
         var newUser = new User();
         newUser.fullname = req.body.fullname;
         newUser.email = req.body.email;
         newUser.password = newUser.encryptPassword(req.body.password);
+        
+        //If pro_pic
+        //console.log(req.files.pro_pic.name);
         
         newUser.save((err) => {
             return done(null, newUser);
