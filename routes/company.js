@@ -12,6 +12,8 @@ module.exports = (app) => {
     
 app.post('/company/create', (req, res) => {
     
+    
+    // for express-fileupload start
     if(req.files){
             
             var file = req.files.company_pic;
@@ -21,7 +23,7 @@ app.post('/company/create', (req, res) => {
             //console.log(req.files.company_pic.name);
             //console.log("Success");
         }
-        
+    // for express-fileupload end
         var newCompany = new Company();
         newCompany.name = req.body.name;
         newCompany.address = req.body.address;
@@ -29,8 +31,8 @@ app.post('/company/create', (req, res) => {
         newCompany.country = req.body.country;
         newCompany.sector = req.body.sector;
         newCompany.website = req.body.website;
-        //newCompany.image = req.body.upload;
-        newCompany.image = req.files.company_pic.name;
+        newCompany.image = req.body.upload;// for formidable fileupload
+        //newCompany.image = req.files.company_pic.name;// for express-fileupload
         newCompany.save((err) => {
             if(err){
                 console.log(err);
@@ -42,7 +44,8 @@ app.post('/company/create', (req, res) => {
             res.redirect('/company/create');
         })
     });
-    
+   
+    // for formidable fileupload
     app.post('/upload', (req, res) => {
         var form = new formidable.IncomingForm();
         form.encoding = 'utf-8';
@@ -55,7 +58,7 @@ app.post('/company/create', (req, res) => {
                    throw err;
                }
                
-               console.log('File has been renamed');
+               //console.log('File has been renamed');
            }); 
         });
         
@@ -67,9 +70,16 @@ app.post('/company/create', (req, res) => {
         });
         
         form.on('end', () => {
-            console.log('File upload was successful');
+            //console.log('File upload was successful');
         });
         
         form.parse(req);
+    });
+    
+    app.get('/companies', (req, res) => {
+        Company.find({}, (err, result) => {
+           
+            res.render('company/companies', {title: 'All Companies || Rateme', user: req.user, data:result });
+        })
     });
 }

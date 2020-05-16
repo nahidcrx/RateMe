@@ -1,25 +1,35 @@
-//For companies file upload
+//For userprofile file upload
 
 $(document).ready(function(){
     
-    $('#closeaftercompanyimageupload').hide();
-    $('.upload-btn').on('click', function(){
-        $('#upload-input').click();
+    $('#continuepp').attr("disabled", "disabled");
+    $('#closeafterupload').hide();
+    
+    $('#continuepp').click(function(e){
+        if($('#continuepp').attr("disabled") == "disabled"){
+            e.preventDefault();
+        }
+    });
+    
+    $('.profile-pic-upload-btn').on('click', function(){
+        $('#profile-pic-upload-input').click();
         
         $('.progress-bar').text('0%');
         $('.progress-bar').width('0%');
     });
     
-    $('#upload-input').on('change', function(){
-        var uploadInput = $('#upload-input');
+    $('#profile-pic-upload-input').on('change', function(){
+        var uploadInput = $('#profile-pic-upload-input');
         
         if(uploadInput.val() != ''){
            var formData = new FormData();
             
             formData.append('upload', uploadInput[0].files[0]);
             
+            console.log(formData);
+            
             $.ajax({
-                url: '/upload',
+                url: '/profilepic/upload',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -42,10 +52,12 @@ $(document).ready(function(){
                             if(uploadPercent === 100){
                                 $('.progress-bar').text('Completed');
                                 $('#completed').text('File Uploaded');
-                                
-                                $('.upload-btn').hide();
-                                $('#closeaftercompanyimageupload').show();
+                                $('.profile-pic-upload-btn').hide();
+                                $('#closeafterupload').show();
                             }
+                            
+                            $('#continuepp').removeAttr("disabled");
+                            
                         }
                     }, false);
                     
@@ -53,10 +65,10 @@ $(document).ready(function(){
                 }
             })
         }
-    })
+    }) 
     
-    $('#closeaftercompanyimageupload').on('click', function(){
-         $('#closeaftercompanyimageupload').hide();
-         $('.upload-btn').show();
+     $('#closeafterupload').on('click', function(){
+         $('#closeafterupload').hide();
+         $('.profile-pic-upload-btn').show();
     });
 })

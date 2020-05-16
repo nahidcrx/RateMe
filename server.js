@@ -2,7 +2,7 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var fileUpload = require('express-fileupload');
+//var fileUpload = require('express-fileupload'); //Don't use while use formidable for file upload
 var validator = require('express-validator');
 var ejs = require('ejs');
 var engine = require('ejs-mate');
@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 //always add express-validator middleware after bodyparser
 app.use(validator());
-app.use(fileUpload());
+//app.use(fileUpload()); //Don't use while use formidable for file upload
 
 //express session middleware
 app.use(session({

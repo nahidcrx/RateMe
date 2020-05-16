@@ -143,15 +143,26 @@ body {
 /*.sidebar-nav*/
 
 .profile_img {
-    width: 65px;
-    height: 65px;
+    width: 150px;
+    height: 150px;
     text-align: center;
-    margin-top: 65px;
+    margin-top: 20px;
     text-align: center;
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 20px;
 }
+
+/*
+.userprofilepic{
+    display: inline;
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    padding: 0;
+    float: left;
+}
+*/
 
 @media(min-width:768px) {
     #wrapper {

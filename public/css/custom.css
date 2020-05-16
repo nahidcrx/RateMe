@@ -116,17 +116,18 @@ input[type="submit"]{
 
 
 .companyListDiv{
-    margin: 20px 0px 0px 38px;
+    display: inline;
+    margin: 20px 0px 0px 30px;
     background-color: white;
     height: 120px;
-    width: 30%;
+    width: 28%;
     box-shadow: 5px 5px 5px #888888;
     padding: 0;
 }
 
 .companyListItemLogo{
-    display: inline;;
-    width: 100px;
+    display: inline;
+    width: 120px;
     height: 120px;
     margin: 0;
     padding: 0;
@@ -137,7 +138,7 @@ input[type="submit"]{
     margin: 0;
     padding: 10px 0px 0px 10px;
     height: 120px;
-    width: 250px;
+    width: 170px;
     float: right;
 }
 

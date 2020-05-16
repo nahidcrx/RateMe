@@ -1,5 +1,8 @@
 var nodemailer = require('nodemailer');
 var async = require('async');
+var formidable = require('formidable');
+var path = require('path');
+var fs = require('fs');
 
 var crypto = require('crypto');
 var User = require('../models/user');
@@ -23,10 +26,59 @@ module.exports = (app, passport) => {
     });
     
     app.post('/signup', validateRegisterForm, passport.authenticate('local.signup', {
-        successRedirect: '/login',
+        successRedirect: '/profilepic',
         failureRedirect: '/signup',
         failureFlash: true
     }));
+    
+    app.get('/profilepic', function(req,res){
+        var errors = req.flash('error');
+        res.render('user/profilepic' , {title: 'Profile Pic Upload || RateMe', messages: errors, hasErrors: errors.length>0});
+    });
+    
+     app.post('/profilepic/check', (req, res) => {
+         
+        User.findOne({'email':req.user.email}, (err, user, done) =>{
+            if(err){
+                return done(err);
+            }
+            if(user){
+                user.image = req.body.upload;
+                user.save();
+            }
+        })
+         
+         res.redirect('/home');
+         
+    });
+    
+    //For formidable file-upload
+    app.post('/profilepic/upload', (req, res) => {
+        //console.log("Route");
+        var form = new formidable.IncomingForm();
+        form.encoding = 'utf-8';
+        
+        form.uploadDir = path.join(__dirname, '../public/users');
+        
+        form.on('file', (field, file) => {
+           fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
+               if(err){
+                   throw err;
+               }
+               //console.log('File has been renamed');
+           }); 
+        });
+        
+        form.on('error', (err) => {
+            console.log('An error occured', err);
+        });
+        
+        form.on('end', () => {
+            //console.log('File upload was successful');
+        });
+        
+        form.parse(req);
+    });
      
     app.get('/login', function(req,res){
         var errors = req.flash('error');

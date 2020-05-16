@@ -57,6 +57,44 @@ passport.use('local.signup', new LocalStrategy({
     })
 }));
 
+//passport.use('local.signupprofilepic', new LocalStrategy({
+//    usernameField: 'email',
+//    passwordField: 'password',
+//    passReqToCallback: true
+//}, (req, email, password, done) => {
+//    User.findOne({'email':email}, (err, user) =>{
+//        if(err){
+//            return done(err);
+//        }
+//        
+//        if(user){
+//            return done(null, false, req.flash('error','Email Already Exist'));
+//        }
+//        
+////        if(req.files){
+////            
+////            var file = req.files.pro_pic;
+////            
+////            file.mv('./public/users/' + file.name);
+////
+////            //console.log(req.files.pro_pic.name);
+////            console.log("Success");
+////        }
+//        
+//        var newUser = new User();
+//        newUser.fullname = req.body.fullname;
+//        newUser.email = req.body.email;
+//        newUser.password = newUser.encryptPassword(req.body.password);
+//        
+//        //If pro_pic
+//        //console.log(req.files.pro_pic.name);
+//        
+//        newUser.save((err) => {
+//            return done(null, newUser);
+//        });
+//    })
+//}));
+
 //login
  passport.use('local.login', new LocalStrategy({
     usernameField: 'email',
