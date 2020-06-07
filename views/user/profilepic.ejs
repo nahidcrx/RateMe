@@ -48,8 +48,10 @@
                 </div>
             <% } %>
         <% } %>
+        
+        <!--        can not use enctype="multipart/form-data" while using formidable-->
 
-    <form method="POST" class="" id="profilepic" action="/profilepic/check">
+    <form method="POST" class="" id="profilepic" action="/profilepic/check" enctype="">
         <h3 class=""><label for="">Profile Picture</label></h3><br>
                         
         <button class="btn btn-lg" type="button" data-toggle="modal" data-target="#file">Add File</button>
@@ -71,7 +73,7 @@
 
                                     <button class="btn btn-lg profile-pic-upload-btn" type="button">Upload File</button>
                                     <button type="button" id="closeafterupload" class="btn btn-lg profile-pic-ok-btn" data-dismiss="modal">Ok</button>
-                                    <input type="file" class="form-control" name="upload" id="profile-pic-upload-input" style="display:none">
+                                    <input type="file" class="form-control" name="upload" id="profile-pic-upload-input" accept="image/*" style="display:none">
                             </div>
                         </div>
                     </div>

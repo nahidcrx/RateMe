@@ -10,6 +10,7 @@ var userSchema = mongoose.Schema({
     image: {type: String, default: 'defaultPic.png'},
     role: {type: String, default: ''},
     company: {
+        companyId: {type: String, default: ''},
         name: {type: String, default: ''},
         image: {type: String, default: ''}
     },

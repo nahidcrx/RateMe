@@ -54,18 +54,28 @@ module.exports = (app, passport) => {
     
     //For formidable file-upload
     app.post('/profilepic/upload', (req, res) => {
-        //console.log("Route");
         var form = new formidable.IncomingForm();
+        
+        
         form.encoding = 'utf-8';
+        form.keepExtensions = true;
+        //form.maxFileSixe = 3 * 1024 *1024;
+
+        
+        
+        ////Done
+        //// File Validation Needed
         
         form.uploadDir = path.join(__dirname, '../public/users');
         
         form.on('file', (field, file) => {
+            //console.log(file);
+            
            fs.rename(file.path, path.join(form.uploadDir, file.name), (err) => {
                if(err){
                    throw err;
                }
-               //console.log('File has been renamed');
+               console.log('File has been renamed');
            }); 
         });
         

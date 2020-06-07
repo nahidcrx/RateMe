@@ -2,6 +2,7 @@
 
 $(document).ready(function(){
     
+    console.log("Here");
     $('#continuepp').attr("disabled", "disabled");
     $('#closeafterupload').hide();
     
