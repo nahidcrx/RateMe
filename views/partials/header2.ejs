@@ -17,5 +17,12 @@
     <link href="/css/simple.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
     <link href="/css/chat.css" rel="stylesheet">
+    
+<!--    Restrict Back Button After Logout-->
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
 
 </head>
