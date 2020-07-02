@@ -1,0 +1,101 @@
+<% layout('layout2') %>
+
+
+
+<div id="wrapper">
+    
+    <% include ../partials/sidebar %>
+
+
+    <div id="page-content-wrapper">
+        <% include ../partials/navbar %>
+        <div class="container-fluid main_body">
+           <div class="row">
+	            <div class="col-lg-12">
+					
+				</div>
+	        </div>
+            
+        </div>
+    </div>
+
+</div>
+
+   
+
+<div class="container">
+
+    <div class="row signup">
+        
+        <% if(hasErrors) {%>
+            <% for(var i = 0; i <messages.length; i++) {%>
+                <div class="alert alert-danger">
+                   <a href="#" class="close" data-dismiss="alert" aria-label="close">
+                       &times;
+                   </a>
+                   <%= messages[i] %>
+                    
+                </div>
+            <% } %>
+        <% } %>
+        
+        <!--        can not use enctype="multipart/form-data" while using formidable-->
+
+    <form method="POST" class="" id="profilepic" action="/profilepic/check" enctype="">
+        <h3 class=""><label for="">Profile Picture</label></h3><br>
+        
+        <img src="/users/<%= user.image %>" class="img-responsive img-circle profile_img" alt="" >
+         
+        <div class="form-group">
+            <button class="btn btn-lg" type="button" data-toggle="modal" data-target="#file" style="background-color:gray;">Add File</button>
+        </div>
+        
+        <span id="completed"></span>
+                        
+            <div id="file" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" id="close" class="close" data-dismiss="modal">&times;</button>
+                            <div class="modal-title">Upload Image</div>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar"></div>
+                                </div>
+
+                                    <button class="btn btn-lg profile-pic-upload-btn" type="button">Upload File</button>
+                                    <button type="button" id="closeafterupload" class="btn btn-lg profile-pic-ok-btn" data-dismiss="modal">Ok</button>
+                                    <input type="file" class="form-control" name="upload" id="profile-pic-upload-input" accept="image/*" style="display:none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>       
+
+            <div>
+                    <div class="form-group">
+                        <input type="submit" id="continuepp" value="Continue" class="form-control btn btn-primary" name="continue" style="">
+                    </div>
+                
+<!--
+                    <div class="form-group">
+                        <a href="/home" id="continuepp" class="form-control btn btn-primary" style="">Continue</a>
+                    </div>
+-->
+                
+                    <div class="form-group">
+                        <a href="/home" class="form-control btn btn-primary" style="height="90px">Skip</a>
+                    </div>
+<!--
+                    <div class="form-group">
+                        <input type="submit" id="skippp" value="Skip" class="form-control btn btn-primary" name="skip" style="">
+                    </div>
+-->
+            </div>
+    </form>
+
+    </div>
+</div>

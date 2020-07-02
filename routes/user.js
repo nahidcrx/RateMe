@@ -3,10 +3,11 @@ var async = require('async');
 var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
-
+var Company = require('../models/company');
 var crypto = require('crypto');
 var User = require('../models/user');
 var secret = require('../secret/secret');
+
 
 //user route declaration
 module.exports = (app, passport) => {
@@ -16,7 +17,11 @@ module.exports = (app, passport) => {
             res.redirect('/home');
         }
         else{
-           res.render('index', {title: 'Index || RateMe'}); 
+            
+            Company.find({}, (err, result) => {
+           
+            res.render('index', {title: 'Index || RateMe', data:result });
+        })
         }
     });
     
@@ -31,19 +36,30 @@ module.exports = (app, passport) => {
         failureFlash: true
     }));
     
-    app.get('/profilepic', function(req,res){
+    app.get('/profilepic',isLoggedIn, function(req,res){
         var errors = req.flash('error');
-        res.render('user/profilepic' , {title: 'Profile Pic Upload || RateMe', messages: errors, hasErrors: errors.length>0});
+        res.render('user/profilepic' , {title: 'Profile Pic Upload || RateMe', user: req.user, messages: errors, hasErrors: errors.length>0});
     });
     
-     app.post('/profilepic/check', (req, res) => {
+    app.get('/changeprofilepic',isLoggedIn, function(req,res){
+        var errors = req.flash('error');
+        res.render('user/changeprofilepic' , {title: 'Change Profile Pic || RateMe', user: req.user, messages: errors, hasErrors: errors.length>0});
+    });
+    
+     app.post('/profilepic/check',isLoggedIn, (req, res) => {
          
         User.findOne({'email':req.user.email}, (err, user, done) =>{
             if(err){
                 return done(err);
             }
             if(user){
-                user.image = req.body.upload;
+                if(req.body.upload === ''){
+                    user.image = 'Default_Profile.png';
+                }
+                else{
+                    user.image = req.body.upload;
+                }
+                
                 user.save();
             }
         })
@@ -53,7 +69,7 @@ module.exports = (app, passport) => {
     });
     
     //For formidable file-upload
-    app.post('/profilepic/upload', (req, res) => {
+    app.post('/profilepic/upload',isLoggedIn, (req, res) => {
         var form = new formidable.IncomingForm();
         
         
@@ -116,7 +132,7 @@ module.exports = (app, passport) => {
         failureFlash: true
     }));
     
-    app.get('/home', function(req,res){
+    app.get('/home', isLoggedIn, function(req,res){
         res.render('home' , {title: 'Home || RateMe', user:req.user});
     });
     
@@ -346,5 +362,15 @@ function validateLoginForm(req,res,next){
     }
     else{
         return next();
+    }
+}
+
+
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        next();
+    }
+    else{
+        res.redirect('/');
     }
 }

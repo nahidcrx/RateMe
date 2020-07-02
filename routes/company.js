@@ -7,30 +7,32 @@ var async = require('async');
 var Company = require('../models/company');
 var User = require('../models/user');
 
+var {arrayAverage} = require('../ratingAvgCount');
+
 module.exports = (app) => {
     
     
-    app.get('/company/create', (req, res) => {
+    app.get('/company/create',isLoggedIn, (req, res) => {
         var success = req.flash('success');
         var errors = req.flash('error');
         
         res.render('company/company', {title: 'Company Registration', user: req.user, success:success, noErrors: success.length > 0, messages: errors, hasErrors: errors.length>0});
     });
     
-app.post('/company/create',validateCompanyRegister, (req, res) => {
+    app.post('/company/create',isLoggedIn,validateCompanyRegister, (req, res) => {
     
     
-    // for express-fileupload start
-//    if(req.files){
-//            
-//            var file = req.files.company_pic;
-//            
-//            file.mv('./public/companies/' + file.name);
-//
-//            //console.log(req.files.company_pic.name);
-//            //console.log("Success");
-//        }
-    // for express-fileupload end
+        // for express-fileupload start
+    //    if(req.files){
+    //            
+    //            var file = req.files.company_pic;
+    //            
+    //            file.mv('./public/companies/' + file.name);
+    //
+    //            //console.log(req.files.company_pic.name);
+    //            //console.log("Success");
+    //        }
+        // for express-fileupload end
     
     
         var newCompany = new Company();
@@ -56,7 +58,7 @@ app.post('/company/create',validateCompanyRegister, (req, res) => {
     });
    
     // for formidable fileupload
-    app.post('/upload', (req, res) => {
+    app.post('/upload', isLoggedIn,(req, res) => {
         var form = new formidable.IncomingForm();
         form.encoding = 'utf-8';
         
@@ -86,27 +88,23 @@ app.post('/company/create',validateCompanyRegister, (req, res) => {
         form.parse(req);
     });
     
-    app.get('/companies', (req, res) => {
+    app.get('/companies',isLoggedIn, (req, res) => {
         Company.find({}, (err, result) => {
            
             res.render('company/companies', {title: 'All Companies || Rateme', user: req.user, data:result });
         })
     });
     
-    app.get('/company-profile/:id', (req, res) => {
+    app.get('/company-profile/:id',isLoggedIn, (req, res) => {
         Company.findOne({'_id':req.params.id}, (err, data) => {
-            //var avg = arrayAverage(data.ratingNumber);
+            var avg = arrayAverage(data.ratingNumber);
             
-            res.render('company/company-profile', {title: 'Company Name', user:req.user, id: req.params.id, data:data});
+            res.render('company/company-profile', {title: 'Company Name', user:req.user, id: req.params.id, data:data, average: avg});
         });
     });
     
-//    app.get('/company/register-employee/:id', (req, res) => {
-//        res.render('company/register-employee', {title: 'Register Employee', user:req.user, id: req.params.id});
-//    });
     
-    
-    app.get('/company/register-employee/:id', (req, res) => {
+    app.get('/company/register-employee/:id',isLoggedIn, (req, res) => {
         
         Company.findOne({'_id':req.params.id}, (err, data) => {
             //var avg = arrayAverage(data.ratingNumber);
@@ -115,7 +113,7 @@ app.post('/company/create',validateCompanyRegister, (req, res) => {
         });
     });
     
-    app.post('/company/register-employee/:id', (req,res,next) => {
+    app.post('/company/register-employee/:id',isLoggedIn, (req,res,next) => {
         async.parallel([
             function(callback){
                Company.update({
@@ -158,6 +156,40 @@ app.post('/company/create',validateCompanyRegister, (req, res) => {
         ])
     });
 
+    app.get('/:name/employees/:id',isLoggedIn, (req,res) => {
+        Company.findOne({'_id':req.params.id}, (err, data) => {
+            res.render('company/employees', {title: 'Company EMployees', user: req.user, data: data});
+        });
+    });
+    
+    app.get('/companies/leaderboard',isLoggedIn, (req, res) => {
+        Company.find({}, (err, result) => {
+           
+            res.render('company/leaderboard', {title: 'Companies Leaderboard || Rateme', user: req.user, data:result });
+        }).sort({'ratingSum': -1});
+    });
+    
+    app.get('/company/search',isLoggedIn, (req, res) => {
+        
+        res.render('company/search', {title: 'Company Search || Rateme', user: req.user });
+        
+    });
+    
+    app.post('/company/search',isLoggedIn, (req, res) => {
+        
+        var name = req.body.search;
+        var regex = new RegExp(name, 'i');
+        Company.find({'$or': [{'name':regex}]}, (err, data) => {
+            if(err){
+                console.log(err);
+            }
+            
+            res.redirect('/company-profile/'+data[0]._id);
+        });
+        
+        
+        
+    });
 }
 
 
@@ -188,5 +220,14 @@ function validateCompanyRegister(req,res,next){
     }
     else{
         return next();
+    }
+}
+
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        next();
+    }
+    else{
+        res.redirect('/');
     }
 }

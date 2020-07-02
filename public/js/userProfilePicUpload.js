@@ -2,7 +2,6 @@
 
 $(document).ready(function(){
     
-    console.log("Here");
     $('#continuepp').attr("disabled", "disabled");
     $('#closeafterupload').hide();
     
@@ -58,6 +57,7 @@ $(document).ready(function(){
                             }
                             
                             $('#continuepp').removeAttr("disabled");
+                            $('#skippp').attr("disabled", "disabled");
                             
                         }
                     }, false);
